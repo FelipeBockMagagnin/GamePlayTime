@@ -4,24 +4,26 @@ import { Link } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 
 export default function GamesSearch() {
-    const [loadingPage, setLoadingPage] = useState(true);
     const [games, setGames] = useState([]);
     var nextGamesPost = useRef('');
     const [showGameLoading, setShowGameLoading] = useState(true);
 
     useEffect(() => {
-        loadGames('https://api.rawg.io/api/games');
-        window.addEventListener("scroll", handleScroll);
+        loadGames('https://api.rawg.io/api/games').then(() => {
+            window.addEventListener("scroll", handleScroll);
+        });
     }, []);
 
     async function loadGamesSearch(url, searchstring) {
-        setLoadingPage(true);
+        console.log('search string', searchstring);
+        setShowGameLoading(true);
         setGames([]);
         nextGamesPost.current = '';
 
-        axios.get(url, searchstring).then(data => {
-            setGames(data.results);
-            nextGamesPost = data.next;
+        axios.get(url + '?search=' + searchstring).then(data => {
+            console.log(data);
+            setGames(data.data.results);
+            nextGamesPost = data.data.next;
             setShowGameLoading(false);
         });
     }
@@ -33,10 +35,6 @@ export default function GamesSearch() {
             if (data.data.results === undefined) {
                 console.log('page loading error', data);
                 return;
-            }
-
-            if (loadingPage) {
-                setLoadingPage(false);
             }
 
             setGames((games) => (games.concat(data.data.results)));
@@ -62,6 +60,7 @@ export default function GamesSearch() {
         loadGamesSearch('https://api.rawg.io/api/games', event.target.value);
     }
 
+
     return (
         <div className="game-list-panel">
             <div className='container mt-3 mb-3'>
@@ -72,7 +71,7 @@ export default function GamesSearch() {
 
             <div>
                 {games.map(game =>
-                    <Link key={game.id} to={'game/' + game.slug}>
+                    <Link key={game.id} to={'games/' + game.slug}>
                         <div className="card card-list">
                             <img src={game.background_image} alt="game" className="card-img-top" />
                             <div className="card-body">

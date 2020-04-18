@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Header(){
+export default function Header() {
     return (
         <nav className="navbar navbar-dark navbar-expand-lg sticky-top bg-dark flex-md-nowrap">
             <Link className="navbar-brand" to="/">GamePlayTime</Link>
@@ -14,6 +14,9 @@ export default function Header(){
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
                         <Link className="nav-link" to='/games'>Games</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to='/login'>Login</Link>
                     </li>
                 </ul>
             </div>

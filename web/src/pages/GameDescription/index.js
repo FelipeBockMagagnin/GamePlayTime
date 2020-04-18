@@ -6,9 +6,10 @@ export default function GameDescription(props) {
     const [gameData, setGameData] = useState({});
     const [showGameLoading, setShowGameLoading] = useState(true);
 
-    console.log(props);
-
-    loadGame(props.match.params.id);
+    useEffect(() => {
+        console.log('props', props.match.params.id);    
+        loadGame(props.match.params.id);
+    }, []);
 
     if (showGameLoading) {
         return <Loader />
@@ -21,13 +22,13 @@ export default function GameDescription(props) {
         setShowGameLoading(true);
 
         const data = await axios.get('https://api.rawg.io/api/games/' + id);
-        console.log('game page', data);
         
-        setShowGameLoading(true);
         setGameData(data.data);
+        setShowGameLoading(false);
     }
 
     function renderData(data) {
+        console.log(data);
         return (
             <div className="card shadow-card container page-card">
 
@@ -107,7 +108,7 @@ export default function GameDescription(props) {
                                 {
                                     data.publishers.map(publisher =>
                                         <div key={publisher.id} className='tag publisher-tag'>
-                                            <src className="image-tag" src={publisher.image_background} alt="game" />
+                                            <img className="image-tag" src={publisher.image_background} alt="game" />
                                             {publisher.name}
                                         </div>
                                     )
@@ -121,7 +122,7 @@ export default function GameDescription(props) {
                                 {
                                     data.developers.map(developer =>
                                         <div key={developer.id} className='tag developers-tag'>
-                                            <src className="image-tag" src={developer.image_background} alt="game" />
+                                            <img className="image-tag" src={developer.image_background} alt="game" />
                                             {developer.name}
                                         </div>
                                     )
